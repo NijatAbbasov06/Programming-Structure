@@ -1,0 +1,12 @@
+Nijat Abbasov
+
+For Array, we put the users in an Array form. But in hash tables, there are some number of buckets where each of the buckets hold linked list of some users. While it  takes O(n) time to add the new customer, to do search and free algorithms in array implementation, in hash table, these complexities are much lower.
+Adding new customer takes O(1) time, for example. When it comes to Search algorithm, it normally takes O(1) time if the depending on the hash function and bucket numbers. When it comes to free algorithm, it takes O(n) time since we are supposed to iterate through each object.
+
+I implemented hash table expansion, I created a new function named resize and rehash to do it. And when adding a customer, I called that function.
+
+2 days.
+
+Really interesting assignment
+
+no idea, I think it is good.

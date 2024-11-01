@@ -1,0 +1,12 @@
+Nijat Abbasov 20230929
+No it is not possible because we cannot find the memory from the pointer
+value. Assert only gives error if the expression is False. So we would need to know the size of the Dest by only having information about a pointer that
+points to Dest. Becuase it is not possible, answer is no.
+
+Yes, I used pointer notation.
+
+3 days. I could not focus :(.
+
+Very good, I really enjoyed it.
+
+No idea. Could not find any bugs, thank you for your time.

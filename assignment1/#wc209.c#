@@ -1,0 +1,33 @@
+#include<stdio.h>
+#include<ctype.h>
+#include<assert.h>
+#include<stdlib.h>
+#include<stdbool.h>
+
+
+enum State {In, Out};
+
+enum State state = Out;
+int wc = 0;
+int c;
+
+
+int main(void){
+  enum State state = Out;
+  int wc = 0;
+  int c;
+  while (getchar() != EOF){
+    switch
+  case
+      ]\state = out{
+
+      }
+	  
+    
+    
+
+
+  }
+
+
+}
