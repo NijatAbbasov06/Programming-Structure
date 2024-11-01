@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "customer_manager2.h"
+#include "customer_manager.h"
 
 enum {HASH_MULTIPLIER = 65599};
 
@@ -21,7 +21,7 @@ static int hash_function(const char *pcKey, int iBucketCount)
 
 
 
-#define UNIT_ARRAY_SIZE 1024
+#define UNIT_ARRAY_SIZE 4
 
 
 
@@ -73,10 +73,6 @@ void resize_and_rehash(DB_T d) {
     free(oldArray_Name);
     free(oldArray_ID);
 
-    memset(d->pArray_Name + d->curArrSize, 0,
-                    d->curArrSize * sizeof(struct UserInfo*));
-    memset(d->pArray_ID + d->curArrSize, 0,
-                    d->curArrSize * sizeof(struct UserInfo*));
 }
 
 
@@ -180,15 +176,20 @@ RegisterCustomer(DB_T d, const char *id,
     return (-1);
   }
 
+  
+
   int index_Name = hash_function(name, d->curArrSize);
   int index_ID = hash_function(id, d->curArrSize);
 
   if (Table_search_Name(d, name, index_Name)!= NULL) {return (-1);}
   if (Table_search_ID(d, id, index_ID)!= NULL) {return (-1);}
   //resize Array
-  if( d->numItems == 0.75 * (d->curArrSize) && d->curArrSize != 1048576){
+  if( d->numItems == (0.75 * (d->curArrSize)) && d->curArrSize != 1048576){
     resize_and_rehash(d);
   }
+  //because curArrSize has changed
+  index_Name = hash_function(name, d->curArrSize);
+  index_ID = hash_function(id, d->curArrSize);
   
   struct UserInfo * new_user = (struct UserInfo*)calloc(1, sizeof(struct UserInfo));
   struct UserInfo * pUser_Name = *(d->pArray_Name + index_Name);
@@ -204,12 +205,16 @@ RegisterCustomer(DB_T d, const char *id,
   else{
     new_user->next_ID = pUser_ID->next_ID;
   }
+  
+
+  
+
   if (!pUser_Name){
     new_user->next_Name = NULL;
   }
   
   else{
-    new_user->next_Name = pUser_ID->next_ID;
+    new_user->next_Name = pUser_Name->next_Name;
   }
   *(d->pArray_Name + index_Name) = new_user;
   *(d->pArray_ID + index_ID) = new_user;
@@ -339,6 +344,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
     }
     
     for (; pUser_ID != NULL; pUser_ID = pUser_ID->next_ID){
+      assert(pUser_ID->next_ID->id);
       if (strcmp(pUser_ID->next_ID->id, id) == 0) {
         pUser_ID->next_ID = pUser_ID->next_ID->next_ID;
         break;

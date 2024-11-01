@@ -76,7 +76,9 @@ int
 RegisterCustomer(DB_T d, const char *id,
 		 const char *name, const int purchase)
 {
-  /* fill out this function */
+
+
+  
   if (!d || !name || !id){
     return (-1);
   }
@@ -84,9 +86,12 @@ RegisterCustomer(DB_T d, const char *id,
     return (-1);
   }
   struct UserInfo * pUser = d->pArray;
-  struct UserInfo * pUser_copy = d->pArray;
+
   for (int i = 0; i < d->curArrSize; i ++){
-    if (!pUser->name || !pUser->id) continue;
+    if (!pUser->name || !pUser->id) {
+      pUser++;
+      continue;
+    }
     if(strcmp(pUser->name, name) == 0 || strcmp(pUser->id, id) ==0){
       return(-1);
     } 
@@ -99,7 +104,7 @@ RegisterCustomer(DB_T d, const char *id,
       return (-1);
     }
     d->curArrSize = newArrSize;
-    printf("the value: %d\n",d->curArrSize);
+
     assert(d->pArray);
     struct UserInfo* pointer = (struct UserInfo*)realloc(d->pArray, 
                           d->curArrSize * sizeof(struct UserInfo));
@@ -113,12 +118,14 @@ RegisterCustomer(DB_T d, const char *id,
                     UNIT_ARRAY_SIZE * sizeof(struct UserInfo));
     }
   }
+  struct UserInfo * pUser_copy = d->pArray;
 
   for (int i = 0; i< d-> curArrSize; i++){
     if (pUser_copy->name == 0){
       assert(name);
       assert(id);
-      pUser_copy->name = strdup(name);   
+      assert((pUser_copy) == (d->pArray +i));
+      pUser_copy->name = strdup(name); 
       pUser_copy->id = strdup(id);
       pUser_copy->purchase = purchase; 
       d->numItems +=1;
@@ -134,12 +141,14 @@ int
 UnregisterCustomerByID(DB_T d, const char *id)
 {
   /* fill out this function */
+
   if (!d || !id){
     return (-1);
   }
   struct UserInfo * pUser = d->pArray;
   for (int i = 0; i<d->curArrSize; i++){
     if (!(pUser->id)) {
+      pUser++;
       continue;
     }
     int val = strcmp(pUser->id, id);
@@ -162,6 +171,8 @@ UnregisterCustomerByID(DB_T d, const char *id)
 int
 UnregisterCustomerByName(DB_T d, const char *name)
 {
+
+  
   /* fill out this function */
   if (!d || !name){
     return (-1);
@@ -169,6 +180,7 @@ UnregisterCustomerByName(DB_T d, const char *name)
   struct UserInfo * pUser = d->pArray;
   for (int i = 0; i<d->curArrSize; i++){
     if (!(pUser->name)) {
+      pUser++;
       continue;
     }
     int val = strcmp(pUser->name, name);
@@ -233,6 +245,7 @@ int
 GetSumCustomerPurchase(DB_T d, FUNCPTR_T fp)
 {
   /* fill out this function */
+
   if (!d || !fp){
     return (-1);
   }
